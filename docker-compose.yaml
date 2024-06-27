@@ -1,0 +1,45 @@
+# version: "3"
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    expose: 
+      - "27017"
+    ports:
+      - "27017:27017"
+    
+    networks:
+      - mern-network
+
+  
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: always
+    ports:
+      - "8070:8070"
+    depends_on:
+      - mongodb
+    networks:
+      - mern-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    
+    tty: true
+    depends_on:
+      - backend
+    networks:
+      - mern-network
+    
+networks:
+  mern-network:
+    driver: bridge
+
+
